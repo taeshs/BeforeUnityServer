@@ -13,12 +13,25 @@ void server::worker_thread() {
 			cs_ol = (CLIENTSOCKET_OL*)key; // same with cs_ol = (CLIENTSOCKET_OL*)ol;
 
 			cout <<"type : " << cs_ol->buf.type << " / buf : " << cs_ol->buf.buf << endl;
+
+			send_all(cs_ol->buf, cs_ol->sock);
 		}
 		else {
+			client_list.remove(cs_ol->sock);
 			closesocket(cs_ol->sock);
 			delete cs_ol;
 		}
 		
+	}
+}
+
+void server::send_all(mypacket& buf, SOCKET sender) {
+	list<SOCKET>::iterator it;
+
+	for (it = client_list.begin(); it != client_list.end(); it++) {
+		if (*it != sender) {
+			send(*it, (char*)&buf, sizeof(mypacket), 0);
+		}
 	}
 }
 

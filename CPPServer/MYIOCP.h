@@ -37,6 +37,8 @@ public:
 
 	void worker_thread();
 
+	void send_all(mypacket& buf, SOCKET sender);
+
 };
 
 typedef struct mypacket {
@@ -48,6 +50,11 @@ typedef struct CLIENTSOCKET_OL {
 	OVERLAPPED ol;
 	SOCKET sock;
 	mypacket buf;
+};
+
+typedef enum packettype {
+	TYPE_CHAR = 1001,
+	TYPE_POS = 1002,
 };
 
  

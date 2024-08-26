@@ -4,9 +4,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class Client
-{
+{   
+    private CancellationTokenSource cts = new CancellationTokenSource();
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Packet
     {
@@ -53,7 +57,19 @@ public class Client
         return structure;
     }
 
-    static void Main(string[] args)
+    static async Task RecvData()
+    {
+        while(true)
+        {
+            if ()
+            {
+                break;
+            }
+        }
+        return;
+    }
+
+    static async void Main(string[] args)
     {
 
         Packet pack = new Packet();
@@ -62,18 +78,24 @@ public class Client
         Socket client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         client_socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888));
 
-        pack.type = 12;
-        pack.data = "HIASDASDASDASDAQQQQQQQQQ   ;////";
+        Task task = RecvData();
         
-        byte[] arr = StructureToByteArray<Packet>(pack);
 
-        ///////
-        //string a = "asdasd1";
-        //byte[] b = Encoding.UTF8.GetBytes(a);
-        ///////
+        while(true)
+        {
+            Console.WriteLine("to server : ");
+            string str = Console.ReadLine();
 
-        client_socket.Send(arr);
-        
+            pack.type = 1001;
+            pack.data = str;
+
+            byte[] arr = StructureToByteArray<Packet>(pack);
+
+            client_socket.Send(arr);
+        }
+
+        await task;//?
+
         client_socket.Shutdown(SocketShutdown.Both);
         client_socket.Close();
     }
